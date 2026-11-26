@@ -1,0 +1,31 @@
+name: Portable App Oluştur
+
+on:
+  push:
+    branches: [ "main" ] # Kod main dalına yüklendiğinde çalışır
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          pip install pyinstaller
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Tek Dosya (Portable) Exe Oluştur
+        run: pyinstaller --onefile --windowed main.py
+
+      - name: Çıktıyı İndirilebilir Yap (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Portable-Uygulama
+          path: dist/main.exe
