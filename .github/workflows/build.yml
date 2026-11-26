@@ -17,11 +17,15 @@ jobs:
           python-version: '3.11'
 
       - name: Bağımlılıkları Yükle
+        shell: pwsh
         run: |
           pip install pyinstaller
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if (Test-Path "requirements.txt") {
+            pip install -r requirements.txt
+          }
 
       - name: Tek Dosya (Portable) Exe Oluştur
+        shell: pwsh
         run: pyinstaller --onefile --windowed main.py
 
       - name: Çıktıyı İndirilebilir Yap (Artifact)
